@@ -1,6 +1,6 @@
-#This is vibe coded if that bothers you dont use it.
+# This is vibe coded if that bothers you dont use it.
 
-# Personal RSS Feed Template
+## Personal RSS Feed Template
 
 Create your own public RSS feed for articles and links using only GitHub Issues, Actions, and Pages. No server or paid service is required.
 
