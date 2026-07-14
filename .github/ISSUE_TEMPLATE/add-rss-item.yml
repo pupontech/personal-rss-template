@@ -1,0 +1,27 @@
+name: Add article to RSS feed
+description: Submit an article/link to your personal RSS feed
+title: "Add article: "
+labels: ["rss-item"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Article URL
+      description: The URL to add to your RSS feed
+      placeholder: https://example.com/article
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Optional title. If blank, the URL will be used.
+      placeholder: Interesting article
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Optional description/notes to include in the feed item
+      placeholder: Why this is worth reading

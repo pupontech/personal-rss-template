@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Install Send to RSS Bookmarklet</title>
+    <style>
+      body { color: #17202a; font-family: system-ui, sans-serif; line-height: 1.55; margin: 2rem auto; max-width: 760px; padding: 0 1rem; }
+      .bookmarklet { background: #0969da; border-radius: 999px; color: white; display: inline-block; font-weight: 700; margin: 1rem 0; padding: .75rem 1rem; text-decoration: none; }
+      code { background: #f6f8fa; border-radius: 6px; padding: .15rem .3rem; }
+    </style>
+  </head>
+  <body>
+    <h1>Install “Send to RSS”</h1>
+    <p>Drag this button to your bookmarks bar:</p>
+    <p><a class="bookmarklet" href="javascript:(()=&gt;{const u=location.href,t=document.title||u,s=(getSelection&amp;&amp;getSelection().toString().trim())||&apos;&apos;,b=[&apos;### Article URL&apos;,&apos;&apos;,u,&apos;&apos;,&apos;### Title&apos;,&apos;&apos;,t,&apos;&apos;,&apos;### Notes&apos;,&apos;&apos;,s].join(&apos;\n&apos;);open(&apos;https://github.com/pupontech/personal-rss-template/issues/new?title=&apos;+encodeURIComponent(&apos;Add article: &apos;+t.slice(0,160))+&apos;&amp;body=&apos;+encodeURIComponent(b)+&apos;&amp;labels=rss-item&apos;,&apos;_blank&apos;,&apos;noopener&apos;);})();">Send to RSS</a></p>
+    <h2>Use it</h2>
+    <ol>
+      <li>Open any article page.</li>
+      <li>Optionally highlight text to use as notes.</li>
+      <li>Click <strong>Send to RSS</strong>.</li>
+      <li>Submit the prefilled GitHub issue.</li>
+    </ol>
+    <p>The workflow adds the article, rebuilds the feed, and closes the issue.</p>
+    <p>Repository: <a href="https://github.com/pupontech/personal-rss-template">pupontech/personal-rss-template</a></p>
+    <p>Your feed: <a href="feed.xml">feed.xml</a></p>
+    <p><a href="./">Back to feed home</a></p>
+  </body>
+</html>

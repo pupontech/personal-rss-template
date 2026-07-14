@@ -1,0 +1,89 @@
+name: Build personal RSS feed
+
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Article URL to add (leave blank for first-time setup)
+        required: false
+        type: string
+      title:
+        description: Optional title
+        required: false
+        type: string
+      notes:
+        description: Optional notes
+        required: false
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - "items.json"
+      - "scripts/**"
+      - ".github/workflows/rss.yml"
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: rss-feed
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.event_name != 'issues' || github.actor == github.repository_owner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Add issue item to items.json
+        if: github.event_name == 'issues'
+        run: node scripts/add-issue-item.mjs "$GITHUB_EVENT_PATH"
+
+      - name: Add manually dispatched item to items.json
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.url != ''
+        run: node scripts/add-dispatch-item.mjs "$GITHUB_EVENT_PATH"
+
+      - name: Generate RSS feed and site
+        run: node scripts/generate-feed.mjs
+        env:
+          FEED_TITLE: ${{ vars.FEED_TITLE || 'My Personal Article Feed' }}
+          FEED_DESCRIPTION: ${{ vars.FEED_DESCRIPTION || 'Articles I send to myself' }}
+          FEED_LANGUAGE: ${{ vars.FEED_LANGUAGE || 'en' }}
+          FEED_SITE_URL: ${{ vars.FEED_SITE_URL }}
+
+      - name: Commit generated feed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add items.json docs/feed.xml docs/index.html docs/bookmarklet.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update RSS feed"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Comment and close issue
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.issue.number;
+            const base = repo.toLowerCase() === `${owner.toLowerCase()}.github.io`
+              ? `https://${owner}.github.io`
+              : `https://${owner}.github.io/${repo}`;
+            await github.rest.issues.createComment({ owner, repo, issue_number, body: `Added to RSS feed: ${base}/feed.xml` });
+            await github.rest.issues.update({ owner, repo, issue_number, state: "closed" });
