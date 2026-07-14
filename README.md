@@ -1,5 +1,5 @@
 # This is vibe coded if that bothers you dont use it.
-# Think Pocket or Instapaper but as RSS as the endpoint.
+# Think Pocket or Instapaper but  RSS as the endpoint.
 
 ## Personal RSS Feed Template
 
